@@ -1,0 +1,94 @@
+<!DOCTYpe <!DOCTYPE html>
+<!--[if lt IE 7]>      <html class="no-js lt-ie9 lt-ie8 lt-ie7"> <![endif]-->
+<!--[if IE 7]>         <html class="no-js lt-ie9 lt-ie8"> <![endif]-->
+<!--[if IE 8]>         <html class="no-js lt-ie9"> <![endif]-->
+<!--[if gt IE 8]>      <html class="no-js"> <!--<![endif]-->
+<html>
+    <head>
+        <meta charset="utf-8">
+        <meta http-equiv="X-UA-Compatible" content="IE=edge">
+        <title></title>
+        <meta name="description" content="">
+        <meta name="viewport" content="width=device-width, initial-scale=1">
+        <link rel="stylesheet" href="style.css">
+        <link rel="stylesheet" href="https://pyscript.net/alpha/pyscript.css" />
+        <link href="http://fonts.cdnfonts.com/css/revolution-2" rel="stylesheet">
+        <!-- <script defer src="https://pyscript.net/alpha/pyscript.js">
+            // await pyodide.loadPackage("requests");
+        </script>
+        <script>
+            let pyodide;
+            async function main() {
+            pyodide = await loadPyodide();
+            await pyodide.loadPackage("requests");
+            // matplotlib is now available
+            }
+            main();
+        </script> -->
+        <script>
+            fetch("https://weather.visualcrossing.com/VisualCrossingWebServices/rest/services/timeline/atlanta%20ga?unitGroup=us&key=ESVDJCXR83MMMX2MQFC7FUGE6&contentType=json", {
+  "method": "GET",
+  "headers": {
+  }
+  })
+.then(response => {
+  if (!response.ok) {
+    throw response; //check the http response code and if isn't ok then throw the response as an error
+  }
+            
+  return response.json(); //parse the result as JSON
+
+}).then(response => {
+  //response now contains parsed JSON ready for use
+  processWeatherData(response);
+
+}).catch((errorResponse) => {
+  if (errorResponse.text) { //additional error information
+    errorResponse.text().then( errorMessage => {
+      //errorMessage now returns the response body which includes the full error message
+    })
+  } else {
+    //no additional error information 
+  } 
+});
+
+function processWeatherData(response) {
+  
+  var location=response.resolvedAddress;
+  var days=response.days;
+  console.log("Location: "+location);
+  for (var i=0;i<days.length;i++) {
+    console.log(days[i].datetime+": tempmax="+days[i].tempmax+", tempmin="+days[i].tempmin);
+  }
+}
+        </script>
+    </head>
+
+    <div>
+        
+    </div>
+
+    <div style="margin: 0; display: inline-block;">
+        <header>
+            BETTER WEATHER
+        </header>
+        <!--[if lt IE 7]>
+            <p class="browsehappy">You are using an <strong>outdated</strong> browser. Please <a href="#">upgrade your browser</a> to improve your experience.</p>
+        <![endif]-->
+
+        <form action="forecast.php" method="get">
+            Date: <input type="text" name="date"><br>
+            <input type="submit">
+        </form>
+
+        <body>
+            <script>
+                console.log("REACHED HERE");
+            </script>
+            <py-script src="better_weather_code.py">
+                
+            </py-script>
+        </body>
+        <img src="cloud.png" alt="Cloud">
+    </div>
+</html>
